@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Incanta Games. All Rights Reserved.
 
 #include "FileSDKBPLibrary.h"
 #include "FileSDK.h"

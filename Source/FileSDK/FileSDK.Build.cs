@@ -1,4 +1,4 @@
-// Some copyright should be here...
+// Copyright Incanta Games. All Rights Reserved.
 
 using UnrealBuildTool;
 

@@ -1,3 +1,5 @@
+// Copyright Incanta Games. All Rights Reserved.
+
 #pragma once
 
 #include "Kismet/BlueprintFunctionLibrary.h"
