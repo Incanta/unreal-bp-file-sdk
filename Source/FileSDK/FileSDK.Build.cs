@@ -1,4 +1,4 @@
-// Copyright Incanta Games. All Rights Reserved.
+// Copyright Incanta Games 2020. All Rights Reserved.
 
 using UnrealBuildTool;
 
