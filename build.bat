@@ -1,0 +1,1 @@
+"C:\Program Files\Epic Games\UE_4.25\Engine\Build\BatchFiles\RunUAT.bat" BuildPlugin -Plugin=%CD%\FileSDK.uplugin -Package=%CD%\Dist -TargetPlatforms=Win32+Win64+Mac+Linux -Rocket -VS2019
