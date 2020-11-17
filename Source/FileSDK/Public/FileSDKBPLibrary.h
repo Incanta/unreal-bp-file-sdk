@@ -1,9 +1,12 @@
-// Copyright Incanta Games. All Rights Reserved.
+// Copyright Incanta Games 2020. All Rights Reserved.
 
 #pragma once
 
+#include <ios>
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "FileInfo.h"
+#include "Misc/Paths.h"
+#include "Misc/FileHelper.h"
 
 #include "FileSDKBPLibrary.generated.h"
 
