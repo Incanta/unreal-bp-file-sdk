@@ -1,26 +1,26 @@
 {
-	"FileVersion": 3,
-	"Version": 2,
-	"VersionName": "1.1",
-	"FriendlyName": "Blueprint File SDK",
-	"Description": "A simple plugin to interact with files and folders within blueprints.",
-	"Category": "Code Plugins",
-	"CreatedBy": "Incanta Games",
-	"CreatedByURL": "https://incanta.games",
-	"DocsURL": "https://github.com/IncantaGames/unreal-bp-file-sdk",
-	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/4f737815666c4e7dabf2043fb55a8419",
-	"SupportURL": "https://discord.gg/5hFrK2D",
-	"EngineVersion": "4.25.0",
-	"WhitelistPlatforms": [ "Win64", "Win32", "Mac", "Linux" ],
-	"CanContainContent": false,
-	"IsBetaVersion": false,
-	"IsExperimentalVersion": false,
-	"Installed": false,
-	"Modules": [
-		{
-			"Name": "FileSDK",
-			"Type": "Runtime",
-			"LoadingPhase": "PreLoadingScreen"
-		}
-	]
+  "FileVersion": 3,
+  "Version": 3,
+  "VersionName": "1.2",
+  "FriendlyName": "Blueprint File SDK",
+  "Description": "A simple plugin to interact with files and folders within blueprints.",
+  "Category": "Code Plugins",
+  "CreatedBy": "Incanta Games",
+  "CreatedByURL": "https://incanta.games",
+  "DocsURL": "https://github.com/IncantaGames/unreal-bp-file-sdk",
+  "MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/4f737815666c4e7dabf2043fb55a8419",
+  "SupportURL": "https://discord.gg/5hFrK2D",
+  "EngineVersion": "4.25.0",
+  "CanContainContent": false,
+  "IsBetaVersion": false,
+  "IsExperimentalVersion": false,
+  "Installed": false,
+  "Modules": [
+    {
+      "Name": "FileSDK",
+      "Type": "Runtime",
+      "LoadingPhase": "PreLoadingScreen",
+      "WhitelistPlatforms": [ "Win64", "Win32", "Mac", "Linux" ],
+    }
+  ]
 }
