@@ -9,4 +9,4 @@ set LINUX_MULTIARCH_ROOT=C:\UnrealToolchains\v17_clang-10.0.1-centos7\
   -Package=%CD%\Dist ^
   -TargetPlatforms=Win32+Win64+Mac+Linux ^
   -Rocket ^
-  -VS2019
+  -VS2017
