@@ -143,7 +143,7 @@ TArray<FString> UFileSDKBPLibrary::GetFilesFromDirectory(
   return FileNames;
 }
 
-void UFileSDKBPLibrary::GetFileOrDirectoryInfo(FString Path, FFileInfo & Info) {
+void UFileSDKBPLibrary::GetFileOrDirectoryInfo(FString Path, FFileSDKFileInfo & Info) {
   IPlatformFile & PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 
   FFileStatData data = PlatformFile.GetStatData(*Path);

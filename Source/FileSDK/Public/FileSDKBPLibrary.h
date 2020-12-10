@@ -4,7 +4,7 @@
 
 #include <ios>
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "FileInfo.h"
+#include "FileSDKFileInfo.h"
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
 
@@ -150,5 +150,5 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
     ),
     Category = "FileSDK"
   )
-  static void GetFileOrDirectoryInfo(FString Path, FFileInfo & Info);
+  static void GetFileOrDirectoryInfo(FString Path, FFileSDKFileInfo & Info);
 };

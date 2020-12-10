@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "FileInfo.generated.h"
+#include "FileSDKFileInfo.generated.h"
 
 USTRUCT(BlueprintType)
-struct FFileInfo {
+struct FFileSDKFileInfo {
   GENERATED_USTRUCT_BODY();
 
   /** The time that the file or directory was originally created, or FDateTime::MinValue if the creation time is unknown */
