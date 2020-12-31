@@ -7,6 +7,7 @@
 #include "FileSDKFileInfo.h"
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
+#include "GenericPlatform/GenericPlatformMisc.h"
 
 #include "FileSDKBPLibrary.generated.h"
 
@@ -151,4 +152,24 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
     Category = "FileSDK"
   )
   static void GetFileOrDirectoryInfo(FString Path, FFileSDKFileInfo & Info);
+
+  UFUNCTION(
+    BlueprintPure,
+    meta = (
+      DisplayName = "Get Current Username",
+      Keywords = "FileSDK get current user name username"
+    ),
+    Category = "FileSDK | Paths"
+  )
+  static FString GetCurrentUsername();
+
+  UFUNCTION(
+    BlueprintPure,
+    meta = (
+      DisplayName = "Get Environment Variable",
+      Keywords = "FileSDK get environment env variable"
+    ),
+    Category = "FileSDK | Paths"
+  )
+  static FString GetEnvironmentVariable(FString VariableName);
 };

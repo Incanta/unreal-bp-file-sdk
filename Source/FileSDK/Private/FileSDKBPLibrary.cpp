@@ -156,3 +156,19 @@ void UFileSDKBPLibrary::GetFileOrDirectoryInfo(FString Path, FFileSDKFileInfo & 
   Info.bIsReadOnly = data.bIsReadOnly;
   Info.bIsValid = data.bIsValid;
 }
+
+FString UFileSDKBPLibrary::GetCurrentUsername() {
+#if PLATFORM_WINDOWS
+  return FGenericPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USERNAME"));
+#elif PLATFORM_LINUX
+  return FGenericPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER"));
+#elif PLATFORM_MAC
+  return FGenericPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER")));
+#else
+  return "PLATFORM_NOT_SUPPORTED";
+#endif
+}
+
+FString UFileSDKBPLibrary::GetEnvironmentVariable(FString VariableName) {
+  return FGenericPlatformMisc::GetEnvironmentVariable(*VariableName);
+}
