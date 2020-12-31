@@ -5,6 +5,7 @@
 #include <ios>
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "FileSDKFileInfo.h"
+#include "FileSDKFileType.h"
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
 #include "GenericPlatform/GenericPlatformMisc.h"
@@ -132,7 +133,7 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
   UFUNCTION(
     BlueprintCallable,
     meta = (
-      DisplayName = "Get Files from Directory",
+      DisplayName = "Get Files or Directories from Directory",
       Keywords = "FileSDK get search find files list directory contents"
     ),
     Category = "FileSDK"
@@ -140,6 +141,20 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
   static TArray<FString> GetFilesFromDirectory(
     FString DirectoryToSearch,
     FString FilterFilesWithExtension,
+    bool SearchSubfolders = false,
+    EFileSDKFileType FileType = EFileSDKFileType::File
+  );
+
+  UFUNCTION(
+    BlueprintCallable,
+    meta = (
+      DisplayName = "Get Directory Contents with File Info",
+      Keywords = "FileSDK get search find files list directory contents file info stat"
+    ),
+    Category = "FileSDK"
+  )
+  static TArray<FFileSDKFileInfo> GetDirectoryContentsWithFileInfo(
+    FString Directory,
     bool SearchSubfolders = false
   );
 

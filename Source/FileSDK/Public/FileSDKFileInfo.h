@@ -8,6 +8,14 @@ USTRUCT(BlueprintType)
 struct FFileSDKFileInfo {
   GENERATED_USTRUCT_BODY();
 
+  /** The full absolute path and file name */
+  UPROPERTY(BlueprintReadOnly, Category = "Details")
+  FString AbsolutePath;
+
+  /** The file name without the path */
+  UPROPERTY(BlueprintReadOnly, Category = "Details")
+  FString Filename;
+
   /** The time that the file or directory was originally created, or FDateTime::MinValue if the creation time is unknown */
   UPROPERTY(BlueprintReadOnly, Category = "Details")
   FDateTime CreationTime;

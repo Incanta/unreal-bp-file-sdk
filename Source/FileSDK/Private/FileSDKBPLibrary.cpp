@@ -121,26 +121,104 @@ bool UFileSDKBPLibrary::ReadBytesFromFile(FString FileName, TArray<uint8> & Cont
 TArray<FString> UFileSDKBPLibrary::GetFilesFromDirectory(
   FString DirectoryToSearch,
   FString FilterFilesWithExtension,
-  bool SearchSubfolders
+  bool SearchSubfolders,
+  EFileSDKFileType FileType
 ) {
   TArray<FString> FileNames;
-  IPlatformFile & PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+  IFileManager & FileManager = IFileManager::Get();
 
   if (SearchSubfolders) {
-    PlatformFile.FindFilesRecursively(
-      FileNames,
-      *DirectoryToSearch,
-      *FilterFilesWithExtension
-    );
+    if (FileType == EFileSDKFileType::File) {
+      FileManager.FindFilesRecursive(
+        FileNames,
+        *DirectoryToSearch,
+        *(TEXT("*") + FilterFilesWithExtension),
+        true,
+        false
+      );
+    } else {
+      FileManager.FindFilesRecursive(
+        FileNames,
+        *DirectoryToSearch,
+        TEXT("*"),
+        false,
+        true
+      );
+    }
   } else {
-    PlatformFile.FindFiles(
-      FileNames,
-      *DirectoryToSearch,
-      *FilterFilesWithExtension
-    );
+    TArray<FString> relativeFileNames;
+
+    if (FileType == EFileSDKFileType::File) {
+      FileManager.FindFiles(
+        relativeFileNames,
+        *DirectoryToSearch,
+        *FilterFilesWithExtension
+      );
+    } else {
+      FileManager.FindFiles(
+        relativeFileNames,
+        *(DirectoryToSearch + FGenericPlatformMisc::GetDefaultPathSeparator() + TEXT("*")),
+        false,
+        true
+      );
+    }
+
+    for (FString fileName : relativeFileNames) {
+      FileNames.Add(
+        DirectoryToSearch +
+        FGenericPlatformMisc::GetDefaultPathSeparator() +
+        fileName
+      );
+    }
   }
 
   return FileNames;
+}
+
+TArray<FFileSDKFileInfo> UFileSDKBPLibrary::GetDirectoryContentsWithFileInfo(
+  FString Directory,
+  bool SearchSubfolders
+) {
+  TArray<FFileSDKFileInfo> contents;
+  IFileManager & FileManager = IFileManager::Get();
+
+  TArray<FString> filePaths;
+  if (SearchSubfolders) {
+    FileManager.FindFilesRecursive(
+      filePaths,
+      *Directory,
+      TEXT("*"),
+      true,
+      true
+    );
+  } else {
+    TArray<FString> relativeFileNames;
+
+    FileManager.FindFiles(
+      relativeFileNames,
+      *(Directory + FGenericPlatformMisc::GetDefaultPathSeparator() + TEXT("*")),
+      true,
+      true
+    );
+
+    for (FString fileName : relativeFileNames) {
+      filePaths.Add(
+        Directory +
+        FGenericPlatformMisc::GetDefaultPathSeparator() +
+        fileName
+      );
+    }
+  }
+
+  for (FString path : filePaths) {
+    FFileSDKFileInfo info;
+    info.AbsolutePath = path;
+    info.Filename = FPaths::GetCleanFilename(path);
+    UFileSDKBPLibrary::GetFileOrDirectoryInfo(path, info);
+    contents.Add(info);
+  }
+
+  return contents;
 }
 
 void UFileSDKBPLibrary::GetFileOrDirectoryInfo(FString Path, FFileSDKFileInfo & Info) {
@@ -148,6 +226,8 @@ void UFileSDKBPLibrary::GetFileOrDirectoryInfo(FString Path, FFileSDKFileInfo & 
 
   FFileStatData data = PlatformFile.GetStatData(*Path);
 
+  Info.AbsolutePath = Path;
+  Info.Filename = FPaths::GetCleanFilename(Path);
   Info.CreationTime = data.CreationTime;
   Info.AccessTime = data.AccessTime;
   Info.ModificationTime = data.ModificationTime;
