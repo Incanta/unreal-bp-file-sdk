@@ -14,7 +14,10 @@ This is an Unreal Engine plugin to give you blueprint nodes for various File IO/
 - Delete Directory (with ability to delete even if not empty)
 - Rename File or Directory
 - Get File or Directory Info (Stat info: Creation Time, Access Time, Modification Time, File Size, Is Directory, Is Read Only, Is Valid)
-- Get Files from Directory (options to filter by extension and recursively search subfolders)
+- Get Files or Directories from Directory (options to filter by extension and recursively search subfolders)
+- Get Directory Contents with File Info
+- Get Environment Variable
+- Get Current User
 
 ## Marketplace
 
