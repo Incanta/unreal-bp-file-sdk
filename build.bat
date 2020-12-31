@@ -9,4 +9,5 @@ set LINUX_MULTIARCH_ROOT=C:\UnrealToolchains\v17_clang-10.0.1-centos7\
   -Package=%CD%\Dist ^
   -TargetPlatforms=Win32+Win64+Mac+Linux ^
   -Rocket ^
-  -VS2017
+  -VS2017 ^
+  | sed "s|Dist[/\\]HostProject[/\\]Plugins[/\\]FileSDK[/\\]||g"
