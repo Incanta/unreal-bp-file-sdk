@@ -243,7 +243,7 @@ FString UFileSDKBPLibrary::GetCurrentUsername() {
 #elif PLATFORM_LINUX
   return FGenericPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER"));
 #elif PLATFORM_MAC
-  return FGenericPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER")));
+  return FGenericPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER"));
 #else
   return "PLATFORM_NOT_SUPPORTED";
 #endif
