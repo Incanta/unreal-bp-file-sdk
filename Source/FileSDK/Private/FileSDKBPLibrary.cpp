@@ -2,6 +2,7 @@
 
 #include "FileSDKBPLibrary.h"
 #include "FileSDK.h"
+#include "FileSDKFileReader.h"
 
 #include "HAL/FileManagerGeneric.h"
 
@@ -9,6 +10,15 @@ UFileSDKBPLibrary::UFileSDKBPLibrary(
   const FObjectInitializer& ObjectInitializer
 ) : Super(ObjectInitializer) {
   //
+}
+
+UFileSDKFileReader * UFileSDKBPLibrary::OpenFileReader(
+  FString FileName,
+  bool OpenInBinaryMode
+) {
+  UFileSDKFileReader * fileReader = NewObject<UFileSDKFileReader>();
+  fileReader->OpenFile(FileName, OpenInBinaryMode);
+  return fileReader;
 }
 
 void UFileSDKBPLibrary::CreateFile(
@@ -251,4 +261,21 @@ FString UFileSDKBPLibrary::GetCurrentUsername() {
 
 FString UFileSDKBPLibrary::GetEnvironmentVariable(FString VariableName) {
   return FGenericPlatformMisc::GetEnvironmentVariable(*VariableName);
+}
+
+std::ios_base::seekdir UFileSDKBPLibrary::FileAnchorToSeekDir(
+  EFileSDKFileAnchor Anchor
+) {
+  switch (Anchor) {
+    case EFileSDKFileAnchor::Beginning: {
+      return std::ios_base::beg;
+    }
+    case EFileSDKFileAnchor::Current: {
+      return std::ios_base::cur;
+    }
+    case EFileSDKFileAnchor::End:
+    default: {
+      return std::ios_base::end;
+    }
+  }
 }

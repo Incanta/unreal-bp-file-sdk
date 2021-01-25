@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "FileSDKFileInfo.h"
 #include "FileSDKFileType.h"
+#include "FileAnchor.h"
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
 #include "GenericPlatform/GenericPlatformMisc.h"
@@ -15,6 +16,19 @@
 UCLASS()
 class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
   GENERATED_UCLASS_BODY()
+
+  UFUNCTION(
+    BlueprintCallable,
+    meta = (
+      DisplayName = "Open File Reader",
+      Keywords = "FileSDK open file reader"
+    ),
+    Category = "FileSDK"
+  )
+  static UFileSDKFileReader * OpenFileReader(
+    FString FileName,
+    bool OpenInBinaryMode = false
+  );
 
   UFUNCTION(
     BlueprintCallable,
@@ -187,4 +201,6 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
     Category = "FileSDK | Paths"
   )
   static FString GetEnvironmentVariable(FString VariableName);
+
+  static std::ios_base::seekdir FileAnchorToSeekDir(EFileSDKFileAnchor Anchor);
 };
