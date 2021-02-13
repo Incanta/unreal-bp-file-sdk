@@ -4,8 +4,6 @@
 #include "FileSDK.h"
 #include "FileSDKFileReader.h"
 
-#include "HAL/FileManagerGeneric.h"
-
 UFileSDKBPLibrary::UFileSDKBPLibrary(
   const FObjectInitializer& ObjectInitializer
 ) : Super(ObjectInitializer) {
@@ -106,17 +104,50 @@ bool UFileSDKBPLibrary::ReadStringFromFile(FString FileName, FString & Content) 
   return FFileHelper::LoadFileToString(Content, *FileName);
 }
 
-bool UFileSDKBPLibrary::WriteStringToFile(FString FileName, FString Content, bool Append) {
+bool UFileSDKBPLibrary::WriteStringToFile(
+  FString FileName,
+  FString Content,
+  bool Append,
+  EFileSDKEncodingOptions Encoding
+) {
+  FFileHelper::EEncodingOptions internalEncoding;
+  switch (Encoding) {
+    case EFileSDKEncodingOptions::AutoDetect: {
+      internalEncoding = FFileHelper::EEncodingOptions::AutoDetect;
+      break;
+    }
+    case EFileSDKEncodingOptions::ForceAnsi: {
+      internalEncoding = FFileHelper::EEncodingOptions::ForceAnsi;
+      break;
+    }
+    case EFileSDKEncodingOptions::ForceUnicode: {
+      internalEncoding = FFileHelper::EEncodingOptions::ForceUnicode;
+      break;
+    }
+    case EFileSDKEncodingOptions::ForceUTF8: {
+      internalEncoding = FFileHelper::EEncodingOptions::ForceUTF8;
+      break;
+    }
+    case EFileSDKEncodingOptions::ForceUTF8WithoutBOM: {
+      internalEncoding = FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM;
+      break;
+    }
+    default: {
+      internalEncoding = FFileHelper::EEncodingOptions::AutoDetect;
+      break;
+    }
+  }
+
   if (Append) {
     return FFileHelper::SaveStringToFile(
       Content,
       *FileName,
-      FFileHelper::EEncodingOptions::AutoDetect,
+      internalEncoding,
       &IFileManager::Get(),
       std::ios_base::app
     );
   } else {
-    return FFileHelper::SaveStringToFile(Content, *FileName);
+    return FFileHelper::SaveStringToFile(Content, *FileName, internalEncoding);
   }
 }
 

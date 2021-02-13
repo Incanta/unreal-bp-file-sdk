@@ -7,9 +7,11 @@
 #include "FileSDKFileInfo.h"
 #include "FileSDKFileType.h"
 #include "FileAnchor.h"
+#include "FileSDKEncodingOptions.h"
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
 #include "GenericPlatform/GenericPlatformMisc.h"
+#include "HAL/FileManagerGeneric.h"
 
 #include "FileSDKBPLibrary.generated.h"
 
@@ -122,7 +124,12 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
     ),
     Category = "FileSDK"
   )
-  static bool WriteStringToFile(FString FileName, FString Content, bool Append = false);
+  static bool WriteStringToFile(
+    FString FileName,
+    FString Content,
+    bool Append = false,
+    EFileSDKEncodingOptions Encoding = EFileSDKEncodingOptions::AutoDetect
+  );
 
   UFUNCTION(
     BlueprintCallable,
