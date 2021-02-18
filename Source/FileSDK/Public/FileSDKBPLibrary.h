@@ -202,6 +202,16 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
   UFUNCTION(
     BlueprintPure,
     meta = (
+      DisplayName = "Get Current User Home Directory",
+      Keywords = "FileSDK get current user home directory"
+    ),
+    Category = "FileSDK | Paths"
+  )
+  static FString GetCurrentUserHomeDirectory();
+
+  UFUNCTION(
+    BlueprintPure,
+    meta = (
       DisplayName = "Get Environment Variable",
       Keywords = "FileSDK get environment env variable"
     ),

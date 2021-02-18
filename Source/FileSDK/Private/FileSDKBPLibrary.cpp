@@ -280,18 +280,38 @@ void UFileSDKBPLibrary::GetFileOrDirectoryInfo(FString Path, FFileSDKFileInfo & 
 
 FString UFileSDKBPLibrary::GetCurrentUsername() {
 #if PLATFORM_WINDOWS
-  return FGenericPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USERNAME"));
+  return FWindowsPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USERNAME"));
 #elif PLATFORM_LINUX
-  return FGenericPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER"));
+  return FUnixPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER"));
 #elif PLATFORM_MAC
-  return FGenericPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER"));
+  return FUnixPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER"));
+#else
+  return "PLATFORM_NOT_SUPPORTED";
+#endif
+}
+
+FString UFileSDKBPLibrary::GetCurrentUserHomeDirectory() {
+#if PLATFORM_WINDOWS
+  return FWindowsPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOMEDRIVE")) + FWindowsPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOMEPATH"));
+#elif PLATFORM_LINUX
+  return FUnixPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOME"));
+#elif PLATFORM_MAC
+  return FUnixPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOME"));
 #else
   return "PLATFORM_NOT_SUPPORTED";
 #endif
 }
 
 FString UFileSDKBPLibrary::GetEnvironmentVariable(FString VariableName) {
-  return FGenericPlatformMisc::GetEnvironmentVariable(*VariableName);
+#if PLATFORM_WINDOWS
+  return FWindowsPlatformMisc::GetEnvironmentVariable(*VariableName);
+#elif PLATFORM_LINUX
+  return FUnixPlatformMisc::GetEnvironmentVariable(*VariableName);
+#elif PLATFORM_MAC
+  return FUnixPlatformMisc::GetEnvironmentVariable(*VariableName);
+#else
+  return "PLATFORM_NOT_SUPPORTED";
+#endif
 }
 
 std::ios_base::seekdir UFileSDKBPLibrary::FileAnchorToSeekDir(
