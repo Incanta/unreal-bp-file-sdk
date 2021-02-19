@@ -296,7 +296,7 @@ FString UFileSDKBPLibrary::GetCurrentUserHomeDirectory() {
 #elif PLATFORM_LINUX
   return FUnixPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOME"));
 #elif PLATFORM_MAC
-  return FUnixPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOME"));
+  return FApplePlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOME"));
 #else
   return "PLATFORM_NOT_SUPPORTED";
 #endif
@@ -308,7 +308,7 @@ FString UFileSDKBPLibrary::GetEnvironmentVariable(FString VariableName) {
 #elif PLATFORM_LINUX
   return FUnixPlatformMisc::GetEnvironmentVariable(*VariableName);
 #elif PLATFORM_MAC
-  return FUnixPlatformMisc::GetEnvironmentVariable(*VariableName);
+  return FApplePlatformMisc::GetEnvironmentVariable(*VariableName);
 #else
   return "PLATFORM_NOT_SUPPORTED";
 #endif

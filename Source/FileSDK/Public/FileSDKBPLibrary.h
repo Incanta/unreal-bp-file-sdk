@@ -10,8 +10,15 @@
 #include "FileSDKEncodingOptions.h"
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
-#include "GenericPlatform/GenericPlatformMisc.h"
 #include "HAL/FileManagerGeneric.h"
+
+#if PLATFORM_WINDOWS
+  #include "Windows/WindowsPlatformMisc.h"
+#elif PLATFORM_LINUX
+  #include "Unix/UnixPlatformMisc.h"
+#elif PLATFORM_MAC
+  #include "Apple/ApplePlatformMisc.h"
+#endif
 
 #include "FileSDKBPLibrary.generated.h"
 
