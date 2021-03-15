@@ -30,7 +30,7 @@ struct FFileSDKFileInfo {
 
   /** Size of the file (in bytes), or -1 if the file size is unknown */
   UPROPERTY(BlueprintReadOnly, Category = "Details")
-  int64 FileSize;
+  int32 FileSize;
 
   /** True if this data is for a directory, false if it's for a file */
   UPROPERTY(BlueprintReadOnly, Category = "Details")
