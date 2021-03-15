@@ -279,36 +279,69 @@ void UFileSDKBPLibrary::GetFileOrDirectoryInfo(FString Path, FFileSDKFileInfo & 
 }
 
 FString UFileSDKBPLibrary::GetCurrentUsername() {
+  auto buf = new char[512];
 #if PLATFORM_WINDOWS
-  return FWindowsPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USERNAME"));
+  FWindowsPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USERNAME"), ANSI_TO_TCHAR(buf), 512);
+  auto str = FString(buf);
+  delete[] buf;
+  return str;
 #elif PLATFORM_LINUX
-  return FUnixPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER"));
+  FUnixPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER"), ANSI_TO_TCHAR(buf), 512);
+  auto str = FString(buf);
+  delete[] buf;
+  return str;
 #elif PLATFORM_MAC
-  return FApplePlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER"));
+  FApplePlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER"), ANSI_TO_TCHAR(buf), 512);
+  auto str = FString(buf);
+  delete[] buf;
+  return str;
 #else
   return "PLATFORM_NOT_SUPPORTED";
 #endif
 }
 
 FString UFileSDKBPLibrary::GetCurrentUserHomeDirectory() {
+  auto buf = new char[512];
 #if PLATFORM_WINDOWS
-  return FWindowsPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOMEDRIVE")) + FWindowsPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOMEPATH"));
+  auto buf2 = new char[512];
+  FWindowsPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOMEDRIVE"), ANSI_TO_TCHAR(buf), 512);
+  FWindowsPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOMEPATH"), ANSI_TO_TCHAR(buf2), 512);
+  auto str = FString(buf) + FString(buf2);
+  delete[] buf;
+  delete[] buf2;
+  return str;
 #elif PLATFORM_LINUX
-  return FUnixPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOME"));
+  FUnixPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOME"), ANSI_TO_TCHAR(buf), 512);
+  auto str = FString(buf);
+  delete[] buf;
+  return str;
 #elif PLATFORM_MAC
-  return FApplePlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOME"));
+  FApplePlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOME"), ANSI_TO_TCHAR(buf), 512);
+  auto str = FString(buf);
+  delete[] buf;
+  return str;
 #else
   return "PLATFORM_NOT_SUPPORTED";
 #endif
 }
 
 FString UFileSDKBPLibrary::GetEnvironmentVariable(FString VariableName) {
+  auto buf = new char[512];
 #if PLATFORM_WINDOWS
-  return FWindowsPlatformMisc::GetEnvironmentVariable(*VariableName);
+  FWindowsPlatformMisc::GetEnvironmentVariable(*VariableName, ANSI_TO_TCHAR(buf), 512);
+  auto str = FString(buf);
+  delete[] buf;
+  return str;
 #elif PLATFORM_LINUX
-  return FUnixPlatformMisc::GetEnvironmentVariable(*VariableName);
+  FUnixPlatformMisc::GetEnvironmentVariable(*VariableName, ANSI_TO_TCHAR(buf), 512);
+  auto str = FString(buf);
+  delete[] buf;
+  return str;
 #elif PLATFORM_MAC
-  return FApplePlatformMisc::GetEnvironmentVariable(*VariableName);
+  FApplePlatformMisc::GetEnvironmentVariable(*VariableName, ANSI_TO_TCHAR(buf), 512);
+  auto str = FString(buf);
+  delete[] buf;
+  return str;
 #else
   return "PLATFORM_NOT_SUPPORTED";
 #endif
