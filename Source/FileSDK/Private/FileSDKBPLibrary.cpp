@@ -83,21 +83,260 @@ bool UFileSDKBPLibrary::RenameFileOrDirectory(
 
 bool UFileSDKBPLibrary::CopyFile(
   FString Source,
-  FString Destination
+  FString Destination,
+  const FFileSDKCopyDelegate & ProgressCallback,
+  FFileSDKDelegatePreInfo PreInfo,
+  int ChunkSizeInKilobytes
 ) {
   IPlatformFile & PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 
-  return PlatformFile.CopyFile(*Destination, *Source);
+  const int64 MaxBufferSize = ChunkSizeInKilobytes * 1024;
+
+  // Note, the below code is mostly copied from the
+  // engine's GenericPlatformFile.cpp source file
+
+  TUniquePtr<IFileHandle> FromFile(PlatformFile.OpenRead(*Source, false));
+  if (!FromFile) {
+    return false;
+  }
+
+  TUniquePtr<IFileHandle> ToFile(PlatformFile.OpenWrite(*Destination, false, false));
+  if (!ToFile) {
+    return false;
+  }
+
+  int64 Size = FromFile->Size();
+  int totalSizeKb = FMath::DivideAndRoundUp(Size, int64(1000));
+  if (Size < 1) {
+    check(Size == 0);
+    return true;
+  }
+
+  int64 AllocSize = FMath::Min<int64>(MaxBufferSize, Size);
+  check(AllocSize);
+
+  uint8* Buffer = (uint8*)FMemory::Malloc(int32(AllocSize));
+  check(Buffer);
+
+  while (Size) {
+    int64 ThisSize = FMath::Min<int64>(AllocSize, Size);
+    FromFile->Read(Buffer, ThisSize);
+    ToFile->Write(Buffer, ThisSize);
+    Size -= ThisSize;
+    ProgressCallback.ExecuteIfBound(
+      PreInfo.PriorWritten + totalSizeKb - FMath::DivideAndRoundUp(Size, int64(1000)),
+      PreInfo.TotalSize > 0 ? PreInfo.TotalSize : totalSizeKb
+    );
+    check(Size >= 0);
+  }
+
+  FMemory::Free(Buffer);
+
+#if PLATFORM_MAC || PLATFORM_IOS
+  struct stat FileInfo;
+  auto applePlatformFile = static_cast<FApplePlatformFile>(PlatformFile);
+  if (applePlatformFile.Stat(*Source, &FileInfo) == 0) {
+    FileInfo.st_mode |= S_IWUSR;
+    chmod(TCHAR_TO_UTF8(*applePlatformFile.NormalizeFilename(*Destination)), FileInfo.st_mode);
+  }
+#endif
+
+  return true;
+}
+
+void UFileSDKBPLibrary::CopyFileAsync(
+  FString Source,
+  FString Destination,
+  const FFileSDKCopyDelegate & ProgressCallback,
+  FFileSDKDelegatePreInfo PreInfo,
+  int ChunkSizeInKilobytes
+) {
+  FFunctionGraphTask::CreateAndDispatchWhenReady(
+    [=] {
+      UFileSDKBPLibrary::CopyFile(
+        Source,
+        Destination,
+        ProgressCallback,
+        PreInfo,
+        ChunkSizeInKilobytes
+      );
+    },
+    TStatId(),
+    nullptr,
+    ENamedThreads::AnyThread
+  );
 }
 
 bool UFileSDKBPLibrary::CopyDirectory(
   FString Source,
   FString Destination,
-  bool OverwriteDestination
+  const FFileSDKCopyDelegate & ProgressCallback,
+  bool OverwriteDestination,
+  int ChunkSizeInKilobytes
 ) {
   IPlatformFile & PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 
-  return PlatformFile.CopyDirectoryTree(*Destination, *Source, OverwriteDestination);
+  // Note, the below code is mostly copied from the
+  // engine's GenericPlatformFile.cpp source file
+
+  check(*Destination);
+  check(*Source);
+
+  FString DestDir(Destination);
+  FPaths::NormalizeDirectoryName(DestDir);
+
+  FString SourceDir(Source);
+  FPaths::NormalizeDirectoryName(SourceDir);
+
+  // Does Source dir exist?
+  if (!PlatformFile.DirectoryExists(*SourceDir)) {
+    return false;
+  }
+
+  // Destination directory exists already or can be created ?
+  if (
+    !PlatformFile.DirectoryExists(*DestDir) &&
+    !PlatformFile.CreateDirectory(*DestDir)
+  ) {
+    return false;
+  }
+
+  // Get total size
+  struct FStatFilesAndDirs : public IPlatformFile::FDirectoryStatVisitor {
+    IPlatformFile & PlatformFile;
+    int64 TotalFileSize;
+
+    FStatFilesAndDirs(IPlatformFile& InPlatformFile)
+      : PlatformFile(InPlatformFile)
+      , TotalFileSize(0) {
+    }
+
+    virtual bool Visit(const TCHAR* FilenameOrDirectory, const FFileStatData& StatData) {
+      if (!StatData.bIsDirectory) {
+        TotalFileSize += StatData.FileSize;
+      }
+
+      return true;
+    }
+  };
+
+  // copy files and directories visitor
+  FStatFilesAndDirs StatFilesAndDirs(PlatformFile);
+
+  // don't bother getting file size of dir
+  // if the user doesn't want it
+  if (ProgressCallback.IsBound()) {
+    bool statResult = PlatformFile.IterateDirectoryStatRecursively(*SourceDir, StatFilesAndDirs);
+
+    if (!statResult) {
+      return false;
+    }
+  }
+
+  // Copy all files and directories
+  struct FCopyFilesAndDirs : public IPlatformFile::FDirectoryVisitor {
+    IPlatformFile & PlatformFile;
+    const TCHAR* SourceRoot;
+    const TCHAR* DestRoot;
+    bool bOverwrite;
+    int chunkSizeInKilobytes;
+    FFileSDKCopyDelegate progressCallback;
+    FFileSDKDelegatePreInfo preInfo;
+
+    FCopyFilesAndDirs(
+      IPlatformFile& InPlatformFile,
+      const TCHAR* InSourceRoot,
+      const TCHAR* InDestRoot,
+      bool bInOverwrite,
+      int inChunkSizeInKilobytes,
+      FFileSDKCopyDelegate inProgressCallback,
+      int inTotalSizeKB
+    ) :
+      PlatformFile(InPlatformFile),
+      SourceRoot(InSourceRoot),
+      DestRoot(InDestRoot),
+      bOverwrite(bInOverwrite),
+      chunkSizeInKilobytes(inChunkSizeInKilobytes),
+      progressCallback(inProgressCallback) {
+        preInfo.TotalSize = inTotalSizeKB;
+        preInfo.PriorWritten = 0;
+    }
+
+    virtual bool Visit(const TCHAR* FilenameOrDirectory, bool bIsDirectory) {
+      FString NewName(FilenameOrDirectory);
+      // change the root
+      NewName = NewName.Replace(SourceRoot, DestRoot);
+
+      if (bIsDirectory) {
+        // create new directory structure
+        if (!PlatformFile.CreateDirectoryTree(*NewName) && !PlatformFile.DirectoryExists(*NewName)) {
+          return false;
+        }
+      } else {
+        // Delete destination file if it exists and we are overwriting
+        if (PlatformFile.FileExists(*NewName) && bOverwrite) {
+          PlatformFile.DeleteFile(*NewName);
+        }
+
+        // Copy file from source
+        if (
+          !UFileSDKBPLibrary::CopyFile(
+            FilenameOrDirectory,
+            NewName,
+            progressCallback,
+            preInfo,
+            chunkSizeInKilobytes
+          )
+        ) {
+          // Not all files could be copied
+          return false;
+        }
+
+        if (progressCallback.IsBound()) {
+          auto statData = PlatformFile.GetStatData(FilenameOrDirectory);
+          preInfo.PriorWritten += FMath::DivideAndRoundUp(statData.FileSize, int64(1000));
+        }
+      }
+      return true; // continue searching
+    }
+  };
+
+  // copy files and directories visitor
+  FCopyFilesAndDirs CopyFilesAndDirs(
+    PlatformFile,
+    *SourceDir,
+    *DestDir,
+    OverwriteDestination,
+    ChunkSizeInKilobytes,
+    ProgressCallback,
+    FMath::DivideAndRoundUp(StatFilesAndDirs.TotalFileSize, int64(1000))
+  );
+
+  // create all files subdirectories and files in subdirectories!
+  return PlatformFile.IterateDirectoryRecursively(*SourceDir, CopyFilesAndDirs);
+}
+
+void UFileSDKBPLibrary::CopyDirectoryAsync(
+  FString Source,
+  FString Destination,
+  const FFileSDKCopyDelegate & ProgressCallback,
+  bool OverwriteDestination,
+  int ChunkSizeInKilobytes
+) {
+  FFunctionGraphTask::CreateAndDispatchWhenReady(
+    [=] {
+      UFileSDKBPLibrary::CopyDirectory(
+        Source,
+        Destination,
+        ProgressCallback,
+        OverwriteDestination,
+        ChunkSizeInKilobytes
+      );
+    },
+    TStatId(),
+    nullptr,
+    ENamedThreads::AnyThread
+  );
 }
 
 bool UFileSDKBPLibrary::ReadStringFromFile(FString FileName, FString & Content) {

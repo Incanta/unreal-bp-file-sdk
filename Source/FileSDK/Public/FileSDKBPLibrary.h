@@ -11,16 +11,32 @@
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
 #include "HAL/FileManagerGeneric.h"
+#include "Async/TaskGraphInterfaces.h"
 
 #if PLATFORM_WINDOWS
   #include "Windows/WindowsPlatformMisc.h"
-#elif PLATFORM_LINUX
+#elif PLATFORM_LINUX || PLATFORM_ANDROID
   #include "Unix/UnixPlatformMisc.h"
-#elif PLATFORM_MAC
+#elif PLATFORM_MAC || PLATFORM_IOS
   #include "Apple/ApplePlatformMisc.h"
 #endif
 
 #include "FileSDKBPLibrary.generated.h"
+
+UDELEGATE()
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FFileSDKCopyDelegate, int, KilobytesWritten, int, TotalKilobytes);
+
+USTRUCT(BlueprintType)
+struct FFileSDKDelegatePreInfo {
+  GENERATED_USTRUCT_BODY();
+  int PriorWritten;
+  int TotalSize;
+
+  FFileSDKDelegatePreInfo() {
+    PriorWritten = 0;
+    TotalSize = 0;
+  }
+};
 
 UCLASS()
 class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
@@ -93,24 +109,70 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
     BlueprintCallable,
     meta = (
       DisplayName = "Copy File",
-      Keywords = "FileSDK copy file"
+      Keywords = "FileSDK copy file",
+      AutoCreateRefTerm = "ProgressCallback, PreInfo",
+      HidePin = "PreInfo"
     ),
     Category = "FileSDK"
   )
-  static bool CopyFile(FString Source, FString Destination);
+  static bool CopyFile(
+    FString Source,
+    FString Destination,
+    const FFileSDKCopyDelegate & ProgressCallback,
+    FFileSDKDelegatePreInfo PreInfo,
+    int ChunkSizeInKilobytes = 1024
+  );
+
+  UFUNCTION(
+    BlueprintCallable,
+    meta = (
+      DisplayName = "Copy File Async",
+      Keywords = "FileSDK copy file async",
+      AutoCreateRefTerm = "ProgressCallback, PreInfo",
+      HidePin = "PreInfo"
+    ),
+    Category = "FileSDK"
+  )
+  static void CopyFileAsync(
+    FString Source,
+    FString Destination,
+    const FFileSDKCopyDelegate & ProgressCallback,
+    FFileSDKDelegatePreInfo PreInfo,
+    int ChunkSizeInKilobytes = 1024
+  );
 
   UFUNCTION(
     BlueprintCallable,
     meta = (
       DisplayName = "Copy Directory",
-      Keywords = "FileSDK copy directory folder"
+      Keywords = "FileSDK copy directory folder",
+      AutoCreateRefTerm = "ProgressCallback"
     ),
     Category = "FileSDK"
   )
   static bool CopyDirectory(
     FString Source,
     FString Destination,
-    bool OverwriteDestination = false
+    const FFileSDKCopyDelegate & ProgressCallback,
+    bool OverwriteDestination = false,
+    int ChunkSizeInKilobytes = 1024
+  );
+
+  UFUNCTION(
+    BlueprintCallable,
+    meta = (
+      DisplayName = "Copy Directory Async",
+      Keywords = "FileSDK copy directory folder async",
+      AutoCreateRefTerm = "ProgressCallback"
+    ),
+    Category = "FileSDK"
+  )
+  static void CopyDirectoryAsync(
+    FString Source,
+    FString Destination,
+    const FFileSDKCopyDelegate & ProgressCallback,
+    bool OverwriteDestination = false,
+    int ChunkSizeInKilobytes = 1024
   );
 
   UFUNCTION(
