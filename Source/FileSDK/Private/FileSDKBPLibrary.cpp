@@ -134,10 +134,9 @@ bool UFileSDKBPLibrary::CopyFile(
 
 #if PLATFORM_MAC || PLATFORM_IOS
   struct stat FileInfo;
-  auto applePlatformFile = static_cast<FApplePlatformFile>(PlatformFile);
-  if (applePlatformFile.Stat(*Source, &FileInfo) == 0) {
+  if (PlatformFile.Stat(*Source, &FileInfo) == 0) {
     FileInfo.st_mode |= S_IWUSR;
-    chmod(TCHAR_TO_UTF8(*applePlatformFile.NormalizeFilename(*Destination)), FileInfo.st_mode);
+    chmod(TCHAR_TO_UTF8(*PlatformFile.NormalizeFilename(*Destination)), FileInfo.st_mode);
   }
 #endif
 
