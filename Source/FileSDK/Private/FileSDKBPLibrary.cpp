@@ -519,7 +519,7 @@ void UFileSDKBPLibrary::GetFileOrDirectoryInfo(FString Path, FFileSDKFileInfo & 
 FString UFileSDKBPLibrary::GetCurrentUsername() {
 #if PLATFORM_WINDOWS
   return FWindowsPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USERNAME"));
-#elif PLATFORM_LINUX
+#elif PLATFORM_LINUX || PLATFORM_ANDROID
   return FUnixPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER"));
 #elif PLATFORM_MAC
   return FApplePlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("USER"));
@@ -531,7 +531,7 @@ FString UFileSDKBPLibrary::GetCurrentUsername() {
 FString UFileSDKBPLibrary::GetCurrentUserHomeDirectory() {
 #if PLATFORM_WINDOWS
   return FWindowsPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOMEDRIVE")) + FWindowsPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOMEPATH"));
-#elif PLATFORM_LINUX
+#elif PLATFORM_LINUX || PLATFORM_ANDROID
   return FUnixPlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOME"));
 #elif PLATFORM_MAC
   return FApplePlatformMisc::GetEnvironmentVariable(ANSI_TO_TCHAR("HOME"));
@@ -543,7 +543,7 @@ FString UFileSDKBPLibrary::GetCurrentUserHomeDirectory() {
 FString UFileSDKBPLibrary::GetEnvironmentVariable(FString VariableName) {
 #if PLATFORM_WINDOWS
   return FWindowsPlatformMisc::GetEnvironmentVariable(*VariableName);
-#elif PLATFORM_LINUX
+#elif PLATFORM_LINUX || PLATFORM_ANDROID
   return FUnixPlatformMisc::GetEnvironmentVariable(*VariableName);
 #elif PLATFORM_MAC
   return FApplePlatformMisc::GetEnvironmentVariable(*VariableName);
