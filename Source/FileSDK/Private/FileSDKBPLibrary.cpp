@@ -133,10 +133,23 @@ bool UFileSDKBPLibrary::CopyFile(
   FMemory::Free(Buffer);
 
 #if PLATFORM_MAC || PLATFORM_IOS
+  // Copied from ApplePlatformFile.cpp which has this extra implementation
+  // copied the contents of ApplePlatformFile::Stat since it's a private method
+  // hacky, but it does the job. the original code hasn't changed in 7 years.
+  // also using FPaths::NormalizeFilename since it's the exact same as
+  // ApplePlatformFile::NormalizeFilename (which is protected)
+
   struct stat FileInfo;
-  if (PlatformFile.Stat(*Source, &FileInfo) == 0) {
+  FString normlizedSource(Source);
+  FString normlizedDestination(Destination);
+
+  FPaths::NormalizeFilename(normlizedSource);
+  FPaths::NormalizeFilename(normlizedDestination);
+
+  if (stat(TCHAR_TO_UTF8(*normlizedSource), &FileInfo) == 0) {
     FileInfo.st_mode |= S_IWUSR;
-    chmod(TCHAR_TO_UTF8(*PlatformFile.NormalizeFilename(*Destination)), FileInfo.st_mode);
+
+    chmod(TCHAR_TO_UTF8(*normlizedDestination), FileInfo.st_mode);
   }
 #endif
 
