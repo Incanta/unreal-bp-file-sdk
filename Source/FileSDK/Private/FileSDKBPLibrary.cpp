@@ -140,16 +140,16 @@ bool UFileSDKBPLibrary::CopyFile(
   // ApplePlatformFile::NormalizeFilename (which is protected)
 
   struct stat FileInfo;
-  FString normlizedSource(Source);
-  FString normlizedDestination(Destination);
+  FString normalizedSource(Source);
+  FString normalizedDestination(Destination);
 
-  FPaths::NormalizeFilename(normlizedSource);
-  FPaths::NormalizeFilename(normlizedDestination);
+  FPaths::NormalizeFilename(normalizedSource);
+  FPaths::NormalizeFilename(normalizedDestination);
 
-  if (stat(TCHAR_TO_UTF8(*normlizedSource), &FileInfo) == 0) {
+  if (stat(TCHAR_TO_UTF8(*normalizedSource), &FileInfo) == 0) {
     FileInfo.st_mode |= S_IWUSR;
 
-    chmod(TCHAR_TO_UTF8(*normlizedDestination), FileInfo.st_mode);
+    chmod(TCHAR_TO_UTF8(*normalizedDestination), FileInfo.st_mode);
   }
 #endif
 
