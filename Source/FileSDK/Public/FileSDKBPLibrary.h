@@ -19,6 +19,7 @@
   #include "Unix/UnixPlatformMisc.h"
 #elif PLATFORM_MAC || PLATFORM_IOS
   #include "Apple/ApplePlatformMisc.h"
+  #include <sys/stat.h>
 #endif
 
 #include "FileSDKBPLibrary.generated.h"
