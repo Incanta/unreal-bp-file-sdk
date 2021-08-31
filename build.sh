@@ -1,8 +1,8 @@
 # only used in windows for cross compiling
-export LINUX_MULTIARCH_ROOT=/c/UnrealToolchains/v19_clang-11.0.1-centos7/
+export LINUX_MULTIARCH_ROOT=/c/UnrealToolchains/v17_clang-10.0.1-centos7/
 ${LINUX_MULTIARCH_ROOT}x86_64-unknown-linux-gnu/bin/clang++ -v
 
-export ENGINE_VERSION=4.27
+export ENGINE_VERSION=4.26
 
 if [ "$(uname)" = "Darwin" ]; then
   UAT_PATH="/Users/Shared/Epic Games/UE_${ENGINE_VERSION}/Engine/Build/BatchFiles/RunUAT.sh"
