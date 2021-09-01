@@ -8,16 +8,19 @@ This is an Unreal Engine plugin to give you blueprint nodes for various File IO/
 - Read Bytes from File
 - Create File (with ability to create parent directories)
 - Copy File
+- Copy File Async (executes the copy outside of the main game thread)
 - Delete File
 - Create Directory
 - Copy Directory (and its entire contents)
+- Copy Directory Async (executes the copy outside of the main game thread)
 - Delete Directory (with ability to delete even if not empty)
 - Rename File or Directory
 - Get File or Directory Info (Stat info: Creation Time, Access Time, Modification Time, File Size, Is Directory, Is Read Only, Is Valid)
 - Get Files or Directories from Directory (options to filter by extension and recursively search subfolders)
 - Get Directory Contents with File Info
 - Get Environment Variable
-- Get Current User
+- Get Current Username
+- Get Current User Home Directory
 
 ## Marketplace
 
