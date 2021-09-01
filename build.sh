@@ -5,6 +5,7 @@ if [ "$(uname)" != "Darwin" ]; then
 fi
 
 export ENGINE_VERSION=4.27
+export PLUGIN_NAME=$(basename $(pwd))
 
 if [ "$(uname)" == "Darwin" ]; then
   UAT_PATH="/Users/Shared/Epic Games/UE_${ENGINE_VERSION}/Engine/Build/BatchFiles/RunUAT.sh"
@@ -12,12 +13,12 @@ if [ "$(uname)" == "Darwin" ]; then
 else
   # windows handles linux cross compile
   UAT_PATH="/c/Program Files/Epic Games/UE_${ENGINE_VERSION}/Engine/Build/BatchFiles/RunUAT.bat"
-  TARGET_PLATFORMS=Win64+Linux
+  TARGET_PLATFORMS=Win64+Linux+LinuxAArch64
 fi
 
 "${UAT_PATH}" \
   BuildPlugin \
-  -Plugin=$(pwd)/FileSDK.uplugin \
+  -Plugin=$(pwd)/${PLUGIN_NAME}.uplugin \
   -Package=$(pwd)/Dist \
   -TargetPlatforms=${TARGET_PLATFORMS} \
   -Rocket \
