@@ -29,11 +29,11 @@ Any and all enhancements will be made to this plugin and will continue to be fre
 
 Checkout the below links if you want to make sure you get the latest and greatest news from Incanta Games:
 - Twitter: https://twitter.com/IncantaGames
-- Discord: https://discord.gg/5hFrK2D
+- Discord: https://discord.gg/cDcP3rBBUc
 
 ## Support
 
-We have a Discord server where you can get expedited support for both issues and feature requests: https://discord.gg/5hFrK2D
+We have a Discord server where you can get expedited support for both issues and feature requests: https://discord.gg/cDcP3rBBUc
 
 You can also make an issue on this GitHub repository: https://github.com/IncantaGames/unreal-bp-file-sdk/issues
 
