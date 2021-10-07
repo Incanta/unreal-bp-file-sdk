@@ -1,26 +1,18 @@
-# Unreal Blueprint File SDK
+# Unreal Blueprint FileSDK
 
-This is an Unreal Engine plugin to give you blueprint nodes for various File IO/Management tasks:
+This is an Unreal Engine plugin to give you blueprint nodes for various File IO/Management tasks.
 
-- Write String to File
-- Read String from File
-- Write Bytes (aka Byte Array) to File
-- Read Bytes from File
-- Create File (with ability to create parent directories)
-- Copy File
-- Copy File Async (executes the copy outside of the main game thread)
-- Delete File
-- Create Directory
-- Copy Directory (and its entire contents)
-- Copy Directory Async (executes the copy outside of the main game thread)
-- Delete Directory (with ability to delete even if not empty)
-- Rename File or Directory
-- Get File or Directory Info (Stat info: Creation Time, Access Time, Modification Time, File Size, Is Directory, Is Read Only, Is Valid)
-- Get Files or Directories from Directory (options to filter by extension and recursively search subfolders)
-- Get Directory Contents with File Info
-- Get Environment Variable
-- Get Current Username
-- Get Current User Home Directory
+Some, but not all, of the things this plugin lets you do:
+- Read/write files as text or binary
+- Random access file reading (read a specific part of the file and not all of it)
+- Read directory contents with detailed file info
+- Search directories for files/directories
+- Rename files/directories
+- Copy files/directories
+
+## Documentation
+
+Find a full, detailed list of all the different blueprint nodes this plugin provides at https://wiki.incanta.games/plugins/filesdk
 
 ## Marketplace
 
