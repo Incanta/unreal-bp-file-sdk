@@ -3,16 +3,21 @@
 #pragma once
 
 #include <ios>
+
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Misc/Paths.h"
+#include "Misc/FileHelper.h"
+#include "HAL/FileManagerGeneric.h"
+#include "Async/TaskGraphInterfaces.h"
+#include "Templates/SubclassOf.h"
+
 #include "FileSDKFileInfo.h"
 #include "FileSDKFileType.h"
 #include "FileAnchor.h"
 #include "FileSDKLineReader.h"
 #include "FileSDKEncodingOptions.h"
-#include "Misc/Paths.h"
-#include "Misc/FileHelper.h"
-#include "HAL/FileManagerGeneric.h"
-#include "Async/TaskGraphInterfaces.h"
+#include "FileSDK.h"
+#include "FileSDKFileReader.h"
 
 #if PLATFORM_WINDOWS
   #include "Windows/WindowsPlatformMisc.h"

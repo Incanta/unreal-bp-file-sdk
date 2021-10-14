@@ -1,8 +1,6 @@
 // Copyright Incanta Games 2020. All Rights Reserved.
 
 #include "FileSDKBPLibrary.h"
-#include "FileSDK.h"
-#include "FileSDKFileReader.h"
 
 UFileSDKBPLibrary::UFileSDKBPLibrary(
   const FObjectInitializer& ObjectInitializer
@@ -365,7 +363,7 @@ bool UFileSDKBPLibrary::ReadLinesFromFile(
 ) {
   bool result = false;
 
-  if (*LineReader != nullptr) {
+  if (LineReader.GetDefaultObject() != nullptr) {
     auto reader = NewObject<UFileSDKLineReader>(
       (UObject*) GetTransientPackage(),
       *LineReader
