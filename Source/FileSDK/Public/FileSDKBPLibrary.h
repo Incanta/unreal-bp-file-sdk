@@ -220,6 +220,8 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
   UFUNCTION(
     BlueprintCallable,
     meta = (
+      DeprecatedFunction,
+      DeprecationMessage="This function has been deprecated; please use 'Copy File or Directory Async'.",
       DisplayName = "Copy File Async",
       Keywords = "FileSDK copy file async",
       AutoCreateRefTerm = "ProgressCallback, PreInfo",
@@ -295,6 +297,8 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
   UFUNCTION(
     BlueprintCallable,
     meta = (
+      DeprecatedFunction,
+      DeprecationMessage="This function has been deprecated; please use 'Copy File or Directory Async'.",
       DisplayName = "Copy Directory Async",
       Keywords = "FileSDK copy directory folder async",
       AutoCreateRefTerm = "ProgressCallback"
