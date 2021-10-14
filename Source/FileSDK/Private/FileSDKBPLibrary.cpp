@@ -286,22 +286,20 @@ bool UFileSDKBPLibrary::CopyDirectory(
         }
       } else {
         // Delete destination file if it exists and we are overwriting
-        if (PlatformFile.FileExists(*NewName) && bOverwrite) {
-          PlatformFile.DeleteFile(*NewName);
-        }
-
-        // Copy file from source
-        if (
-          !UFileSDKBPLibrary::CopyFile(
-            FilenameOrDirectory,
-            NewName,
-            progressCallback,
-            preInfo,
-            chunkSizeInKilobytes
-          )
-        ) {
-          // Not all files could be copied
-          return false;
+        if (!PlatformFile.FileExists(*NewName) || bOverwrite) {
+          // Copy file from source
+          if (
+            !UFileSDKBPLibrary::CopyFile(
+              FilenameOrDirectory,
+              NewName,
+              progressCallback,
+              preInfo,
+              chunkSizeInKilobytes
+            )
+          ) {
+            // Not all files could be copied
+            return false;
+          }
         }
 
         if (progressCallback.IsBound()) {
