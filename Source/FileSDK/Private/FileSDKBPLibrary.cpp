@@ -355,6 +355,35 @@ bool UFileSDKBPLibrary::ReadStringFromFile(FString FileName, FString & Content) 
   return FFileHelper::LoadFileToString(Content, *FileName);
 }
 
+bool UFileSDKBPLibrary::ReadLinesFromFile(
+  FString FileName,
+  TSubclassOf<class UFileSDKLineReader> LineReader,
+  TArray<FString> & Lines
+) {
+  bool result = false;
+
+  if (*LineReader != nullptr) {
+    auto reader = NewObject<UFileSDKLineReader>(
+      (UObject*) GetTransientPackage(),
+      *LineReader
+    );
+
+    result = FFileHelper::LoadFileToStringArrayWithPredicate(
+      Lines,
+      *FileName,
+      [reader](const FString & line) { return reader->FilterLine(line); }
+    );
+  } else {
+    result = FFileHelper::LoadFileToStringArrayWithPredicate(
+      Lines,
+      *FileName,
+      [](const FString&) { return true; }
+    );
+  }
+
+  return result;
+}
+
 bool UFileSDKBPLibrary::WriteStringToFile(
   FString FileName,
   FString Content,

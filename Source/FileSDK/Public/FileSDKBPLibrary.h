@@ -7,6 +7,7 @@
 #include "FileSDKFileInfo.h"
 #include "FileSDKFileType.h"
 #include "FileAnchor.h"
+#include "FileSDKLineReader.h"
 #include "FileSDKEncodingOptions.h"
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
@@ -185,6 +186,20 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
     Category = "FileSDK"
   )
   static bool ReadStringFromFile(FString FileName, FString & Content);
+
+  UFUNCTION(
+    BlueprintPure,
+    meta = (
+      DisplayName = "Read Lines from File",
+      Keywords = "FileSDK read lines array file string text"
+    ),
+    Category = "FileSDK"
+  )
+  static bool ReadLinesFromFile(
+    FString FileName,
+    TSubclassOf<class UFileSDKLineReader> LineReader,
+    TArray<FString> & Lines
+  );
 
   UFUNCTION(
     BlueprintCallable,
