@@ -86,7 +86,8 @@ bool UFileSDKBPLibrary::CopyFile(
   FString Destination,
   const FFileSDKCopyDelegate & ProgressCallback,
   FFileSDKDelegatePreInfo PreInfo,
-  int ChunkSizeInKilobytes
+  int ChunkSizeInKilobytes,
+  bool OverwriteDestination
 ) {
   IPlatformFile & PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 
@@ -94,6 +95,10 @@ bool UFileSDKBPLibrary::CopyFile(
 
   // Note, the below code is mostly copied from the
   // engine's GenericPlatformFile.cpp source file
+
+  if (PlatformFile.FileExists(*Destination) && !OverwriteDestination) {
+    return false;
+  }
 
   TUniquePtr<IFileHandle> FromFile(PlatformFile.OpenRead(*Source, false));
   if (!FromFile) {

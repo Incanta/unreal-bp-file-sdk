@@ -32,7 +32,8 @@ void UFileSDKCopyFileAsync::Activate() {
           Destination,
           ProgressCallback,
           PreInfo,
-          ChunkSizeInKilobytes
+          ChunkSizeInKilobytes,
+          OverwriteDestination
         );
 
         Completed.Broadcast(successful);

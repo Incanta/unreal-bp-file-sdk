@@ -180,6 +180,7 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
    * @param PreInfo The number of kilobytes you want each chunk of data to be copied as.
    * Smaller numbers can give you more fine progress updates, but at the cost of more disk IO operations,
    * potentially slowing down the overall copy.
+   * @param OverwriteDestination If file exists and this is set to true, the contents of the file will be overwritten.
    *
    * @return Returns false if Source could not be opened (likely because it doesn't exist) or if Destination
    * could not be opened for write permissions (likely the directory doesn't exist, or the user doesn't have
@@ -200,7 +201,8 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
     FString Destination,
     const FFileSDKCopyDelegate & ProgressCallback,
     FFileSDKDelegatePreInfo PreInfo,
-    int ChunkSizeInKilobytes = 1024
+    int ChunkSizeInKilobytes = 1024,
+    bool OverwriteDestination = false
   );
 
   /**
