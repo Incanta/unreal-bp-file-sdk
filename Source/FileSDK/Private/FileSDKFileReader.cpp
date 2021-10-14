@@ -23,6 +23,10 @@ void UFileSDKFileReader::OpenFile(
   }
 }
 
+bool UFileSDKFileReader::IsGood() {
+  return this->fileReader && this->fileReader->good();
+}
+
 bool UFileSDKFileReader::SeekFilePosition(
   EFileSDKFileAnchor Anchor,
   int Offset
@@ -89,10 +93,6 @@ int UFileSDKFileReader::ReadStringToEnd(FString & Content) {
   } else {
     return 0;
   }
-}
-
-bool UFileSDKFileReader::IsGood() {
-  return this->fileReader && this->fileReader->good();
 }
 
 void UFileSDKFileReader::Close() {
