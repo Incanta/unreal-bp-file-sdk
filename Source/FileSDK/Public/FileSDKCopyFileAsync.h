@@ -28,8 +28,8 @@ public:
    * in a separate background thread, preventing the game thread from waiting for the copy
    * operation to finish.
    *
-   * @param Source An absolute path to the file you want to copy.
-   * @param Destination An absolute path to where you want to copy the file to. You cannot provide
+   * @param Source An absolute path to the file or directory you want to copy.
+   * @param Destination An absolute path to where you want to copy the file or to. You cannot provide
    * "/path/to/file.csv" for Source and only provide "file-old.csv" for Destination; you must provide
    * the full absolute path of the new file (i.e. "/path/to/file-old.csv").
    * @param ProgressCallback This allows you to attach an event to receive execution when progress is made,
@@ -61,6 +61,9 @@ public:
     int ChunkSizeInKilobytes = 1024
   );
 
+  /**
+   * This execution pin is called when the copy finishes, regardless if it was successful or not.
+   */
   UPROPERTY(BlueprintAssignable)
   FFileSDKOnCopyCompleted Completed;
 
