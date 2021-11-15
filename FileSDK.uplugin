@@ -20,7 +20,7 @@
       "Name": "FileSDK",
       "Type": "Runtime",
       "LoadingPhase": "PreLoadingScreen",
-      "WhitelistPlatforms": [ "Win64", "Mac", "Linux", "LinuxArm64" ]
+      "WhitelistPlatforms": [ "Win64", "Mac", "Linux" ]
     }
   ]
 }
