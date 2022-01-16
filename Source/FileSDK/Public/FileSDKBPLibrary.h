@@ -374,8 +374,8 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
    *
    * @param FileName An absolute path to the file you would like to write.
    * @param Content The text you would like to write to the file.
-   * @param Append 	If set to true, the file will be erased before writing Content to it; if set to false,
-   * Content will be written at the end of hte file. New lines/carriage returns will not be automatically
+   * @param Append If set to false, the file will be erased before writing Content to it; if set to true,
+   * Content will be written at the end of the file. New lines/carriage returns will not be automatically
    * inserted for you.
    * @param Encoding Encoding options that are passed down to the file writer. "Auto Detect" will do its
    * best to determine the encoding of the string, but you can also use one of the
