@@ -19,7 +19,7 @@ cd ${PLUGIN_NAME}
 
 PLUGIN_FILE_CONTENTS=$(cat ${PLUGIN_NAME}.uplugin)
 
-versions="4.25.0 4.26.0 4.27.0"
+versions="4.26.0 4.27.0 5.0.0"
 for version in ${versions}
 do
   newContent=$(sed -r "s/\"EngineVersion\": \"[0-9]+\.[0-9]+\.[0-9]+\"/\"EngineVersion\": \"${version}\"/" ${PLUGIN_NAME}.uplugin)
