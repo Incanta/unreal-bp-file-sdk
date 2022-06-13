@@ -43,4 +43,16 @@ struct FFileSDKFileInfo {
   /** True if file or directory was found, false otherwise. Note that this value being true does not ensure that the other members are filled in with meaningful data, as not all file systems have access to all of this data */
   UPROPERTY(BlueprintReadOnly, Category = "Details")
   bool bIsValid;
+
+  FFileSDKFileInfo() {
+    AbsolutePath = "";
+    Filename = "";
+    CreationTime = FDateTime();
+    AccessTime = FDateTime();
+    ModificationTime = FDateTime();
+    FileSize = 0;
+    bIsDirectory = false;
+    bIsReadOnly = false;
+    bIsValid = false;
+  }
 };
