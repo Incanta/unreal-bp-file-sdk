@@ -425,7 +425,7 @@ bool UFileSDKBPLibrary::WriteStringToFile(
       *FileName,
       internalEncoding,
       &IFileManager::Get(),
-      std::ios_base::app
+      FILEWRITE_Append
     );
   } else {
     return FFileHelper::SaveStringToFile(Content, *FileName, internalEncoding);
