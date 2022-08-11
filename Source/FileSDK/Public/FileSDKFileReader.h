@@ -36,6 +36,11 @@ class UFileSDKFileReader : public UObject {
   )
   bool IsGood();
 
+  /**
+   * Returns the current position of the pointer for reading the file.
+   *
+   * @return The current position.
+   */
   UFUNCTION(
     BlueprintCallable,
     meta = (
