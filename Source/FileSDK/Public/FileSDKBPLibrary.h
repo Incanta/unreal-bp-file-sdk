@@ -53,6 +53,7 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
    * Creates a File Reader instance; File Readers can be used to control how the file is read.
    * You can seek to different parts of the file, only read in a specified number of bytes, etc.
    * This gives you the most amount of control and is great for only reading metadata in large files.
+   * NOTE: Most use cases should use "Read String from File" or "Read Bytes from File" nodes.
    *
    * @param FileName An absolute path of the file that you want to open for reading.
    * @param OpenInBinaryMode Setting this to true will open the file for reading binary data;
@@ -70,8 +71,7 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
     Category = "FileSDK"
   )
   static UFileSDKFileReader * OpenFileReader(
-    FString FileName,
-    bool OpenInBinaryMode = false
+    FString FileName
   );
 
   /**

@@ -5,7 +5,8 @@
 #include "UObject/Object.h"
 #include "FileAnchor.h"
 
-#include <fstream>
+#include "HAL/FileManager.h"
+#include "Serialization/Archive.h"
 
 #include "FileSDKFileReader.generated.h"
 
@@ -15,7 +16,7 @@ UCLASS(BlueprintType, Blueprintable)
 class UFileSDKFileReader : public UObject {
   GENERATED_UCLASS_BODY()
 
-  void OpenFile(FString fileName, bool OpenInBinaryMode);
+  void OpenFile(FString fileName);
 
   /**
    * Checks to see if the file reader is in a "good" state. This is synonymous to the C++ good function.
@@ -35,6 +36,16 @@ class UFileSDKFileReader : public UObject {
   )
   bool IsGood();
 
+  UFUNCTION(
+    BlueprintCallable,
+    meta = (
+      DisplayName = "Get File Position",
+      Keywords = "FileSDK get current file position pointer"
+    ),
+    Category = "FileSDK | File Reader"
+  )
+  int64 GetFilePosition();
+
   /**
    * Change the position of the File Reader; this is essentially a pointer of where you're going
    * to start reading for any of the following read nodes. When you open a File Reader, the seek
@@ -53,7 +64,7 @@ class UFileSDKFileReader : public UObject {
     ),
     Category = "FileSDK | File Reader"
   )
-  bool SeekFilePosition(EFileSDKFileAnchor Anchor, int Offset);
+  bool SeekFilePosition(EFileSDKFileAnchor Anchor, int64 Offset);
 
   /**
    * Reads a specified number of bytes from the current file reader location as a binary Byte array.
@@ -74,7 +85,7 @@ class UFileSDKFileReader : public UObject {
     ),
     Category = "FileSDK | File Reader"
   )
-  int ReadBytes(int Num, TArray<uint8> & Content);
+  int64 ReadBytes(int64 Num, TArray<uint8> & Content);
 
   /**
    * Reads the rest of the file from the current location as a binary Byte array. The file reader
@@ -91,7 +102,7 @@ class UFileSDKFileReader : public UObject {
     ),
     Category = "FileSDK | File Reader"
   )
-  int ReadBytesToEnd(TArray<uint8> & Content);
+  int64 ReadBytesToEnd(TArray<uint8> & Content);
 
   /**
    * Reads a specified number of bytes from the current file reader location as a String.
@@ -112,7 +123,7 @@ class UFileSDKFileReader : public UObject {
     ),
     Category = "FileSDK | File Reader"
   )
-  int ReadString(int Num, FString & Content);
+  int64 ReadString(int64 Num, FString & Content);
 
   /**
    * Reads the rest of the file from the current location as a String. The file reader location
@@ -129,7 +140,7 @@ class UFileSDKFileReader : public UObject {
     ),
     Category = "FileSDK | File Reader"
   )
-  int ReadStringToEnd(FString & Content);
+  int64 ReadStringToEnd(FString & Content);
 
   /**
    * Closes the file if it's valid/open. Does nothing otherwise.
@@ -150,14 +161,8 @@ class UFileSDKFileReader : public UObject {
   UPROPERTY(BlueprintReadOnly, Category = "Details")
   FString FileName;
 
-  /**
-   * True if the file was opened to be read in binary mode, false for text.
-   */
-  UPROPERTY(BlueprintReadOnly, Category = "Details")
-  bool BinaryMode;
-
 private:
-  std::ifstream * fileReader;
+  FArchive * fileReader;
 
   friend class UFileSDKBPLibrary;
 };

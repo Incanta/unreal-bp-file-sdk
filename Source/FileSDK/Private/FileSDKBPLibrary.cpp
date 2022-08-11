@@ -9,11 +9,10 @@ UFileSDKBPLibrary::UFileSDKBPLibrary(
 }
 
 UFileSDKFileReader * UFileSDKBPLibrary::OpenFileReader(
-  FString FileName,
-  bool OpenInBinaryMode
+  FString FileName
 ) {
   UFileSDKFileReader * fileReader = NewObject<UFileSDKFileReader>();
-  fileReader->OpenFile(FileName, OpenInBinaryMode);
+  fileReader->OpenFile(FileName);
   return fileReader;
 }
 

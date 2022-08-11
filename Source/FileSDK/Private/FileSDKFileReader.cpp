@@ -10,86 +10,127 @@ UFileSDKFileReader::UFileSDKFileReader(
 }
 
 void UFileSDKFileReader::OpenFile(
-  FString fileName,
-  bool OpenInBinaryMode
+  FString fileName
 ) {
   this->FileName = fileName;
-  this->BinaryMode = OpenInBinaryMode;
-  this->fileReader = new std::ifstream();
-  if (OpenInBinaryMode) {
-    this->fileReader->open(TCHAR_TO_UTF8(*fileName), std::ios_base::in | std::ios_base::binary);
-  } else {
-    this->fileReader->open(TCHAR_TO_UTF8(*fileName), std::ios_base::in);
-  }
+  this->fileReader = IFileManager::Get().CreateFileReader(*fileName);
 }
 
 bool UFileSDKFileReader::IsGood() {
-  return this->fileReader && this->fileReader->good();
+  return
+    this->fileReader &&
+    !this->fileReader->IsError() &&
+    !this->fileReader->IsCriticalError() &&
+    !this->fileReader->AtEnd();
+}
+
+int64 UFileSDKFileReader::GetFilePosition() {
+  if (this->fileReader) {
+    return this->fileReader->Tell();
+  } else {
+    return 0;
+  }
 }
 
 bool UFileSDKFileReader::SeekFilePosition(
   EFileSDKFileAnchor Anchor,
-  int Offset
+  int64 Offset
 ) {
-  if (this->fileReader && this->fileReader->good()) {
-    this->fileReader->seekg(
-      Offset,
-      UFileSDKBPLibrary::FileAnchorToSeekDir(Anchor)
-    );
+  if (this->IsGood() && Offset >= 0) {
+    switch (Anchor) {
+      case EFileSDKFileAnchor::Beginning: {
+        if (Offset > this->fileReader->TotalSize()) {
+          this->fileReader->Seek(this->fileReader->TotalSize());
+        } else {
+          this->fileReader->Seek(Offset);
+        }
+        break;
+      }
+      case EFileSDKFileAnchor::Current: {
+        if (this->fileReader->Tell() + Offset > this->fileReader->TotalSize()) {
+          this->fileReader->Seek(this->fileReader->TotalSize());
+        } else {
+          this->fileReader->Seek(this->fileReader->Tell() + Offset);
+        }
+        break;
+      }
+      case EFileSDKFileAnchor::End: {
+        if (Offset > this->fileReader->TotalSize()) {
+          this->fileReader->Seek(0);
+        } else {
+          this->fileReader->Seek(this->fileReader->TotalSize() - Offset);
+        }
+        break;
+      }
+    }
     return true;
   } else {
     return false;
   }
 }
 
-int UFileSDKFileReader::ReadBytes(int Num, TArray<uint8> & Content) {
-  if (this->fileReader && this->fileReader->good()) {
-    char * buffer = new char[Num];
+int64 UFileSDKFileReader::ReadBytes(int64 Num, TArray<uint8> & Content) {
+  if (this->IsGood()) {
+    uint8 * Buffer = new uint8[Num];
     Content.Reserve(Num);
-    memset(buffer, 0, Num);
-    this->fileReader->read(buffer, Num);
-    int numRead = this->fileReader->gcount();
-    Content.Append((uint8*) buffer, numRead);
-    return numRead;
+    memset(Buffer, 0, Num);
+    int64 PosBefore = this->fileReader->Tell();
+    this->fileReader->Serialize(Buffer, Num);
+    int64 PosAfter = this->fileReader->Tell();
+    int64 NumRead = PosAfter - PosBefore;
+    Content.Append(Buffer, NumRead);
+    return NumRead;
   } else {
     return 0;
   }
 }
 
-int UFileSDKFileReader::ReadBytesToEnd(TArray<uint8> & Content) {
-  if (this->fileReader && this->fileReader->good()) {
-    int currentPosition = this->fileReader->tellg();
-    this->fileReader->seekg(0, std::ios_base::end);
-    int endPosition = this->fileReader->tellg();
-    this->fileReader->seekg(currentPosition, std::ios_base::beg);
+int64 UFileSDKFileReader::ReadBytesToEnd(TArray<uint8> & Content) {
+  if (this->IsGood()) {
+    int64 CurrentPosition = this->fileReader->Tell();
+    int64 EndPosition = this->fileReader->TotalSize();
 
-    return this->ReadBytes(endPosition - currentPosition + 1, Content);
+    return this->ReadBytes(EndPosition - CurrentPosition, Content);
   } else {
     return 0;
   }
 }
 
-int UFileSDKFileReader::ReadString(int Num, FString & Content) {
-  if (this->fileReader && this->fileReader->good()) {
-    char * buffer = new char[Num + 1]; // one more for string termination
-    Content.Reset(Num);
-    memset(buffer, 0, Num + 1);
-    this->fileReader->read(buffer, Num);
-    Content.Append(buffer);
-    return this->fileReader->gcount();
+int64 UFileSDKFileReader::ReadString(int64 Num, FString & Content) {
+  if (this->IsGood()) {
+    uint8 * Buffer = new uint8[Num];
+    Content.Reserve(Num);
+    memset(Buffer, 0, Num);
+    int64 PosBefore = this->fileReader->Tell();
+    this->fileReader->Serialize(Buffer, Num);
+    int64 PosAfter = this->fileReader->Tell();
+    int64 NumRead = PosAfter - PosBefore;
+
+    int64 Count = NumRead;
+    uint8 * BufferIterator = Buffer;
+    Content.Empty(Count);
+    while (Count)
+    {
+      int16 Value = *BufferIterator;
+
+      Content += TCHAR(Value);
+
+      ++BufferIterator;
+      Count--;
+    }
+
+    return NumRead;
   } else {
     return 0;
   }
 }
 
-int UFileSDKFileReader::ReadStringToEnd(FString & Content) {
-  if (this->fileReader && this->fileReader->good()) {
-    int currentPosition = this->fileReader->tellg();
-    this->fileReader->seekg(0, std::ios_base::end);
-    int endPosition = this->fileReader->tellg();
-    this->fileReader->seekg(currentPosition, std::ios_base::beg);
+int64 UFileSDKFileReader::ReadStringToEnd(FString & Content) {
+  if (this->IsGood()) {
+    int64 CurrentPosition = this->fileReader->Tell();
+    int64 EndPosition = this->fileReader->TotalSize();
 
-    return this->ReadString(endPosition - currentPosition + 1, Content);
+    return this->ReadString(EndPosition - CurrentPosition, Content);
   } else {
     return 0;
   }
@@ -97,6 +138,6 @@ int UFileSDKFileReader::ReadStringToEnd(FString & Content) {
 
 void UFileSDKFileReader::Close() {
   if (this->fileReader) {
-    this->fileReader->close();
+    this->fileReader->Close();
   }
 }
