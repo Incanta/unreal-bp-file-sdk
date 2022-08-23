@@ -56,8 +56,6 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
    * NOTE: Most use cases should use "Read String from File" or "Read Bytes from File" nodes.
    *
    * @param FileName An absolute path of the file that you want to open for reading.
-   * @param OpenInBinaryMode Setting this to true will open the file for reading binary data;
-   * false opens the file to read text data.
    *
    * @return The File Reader instance regardless of the status of successful open.
    * See the `Is Good` node before attempting to read anything.
