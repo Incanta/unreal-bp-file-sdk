@@ -47,9 +47,9 @@ struct FFileSDKFileInfo {
   FFileSDKFileInfo() {
     AbsolutePath = "";
     Filename = "";
-    CreationTime = FDateTime();
-    AccessTime = FDateTime();
-    ModificationTime = FDateTime();
+    CreationTime = FDateTime(0);
+    AccessTime = FDateTime(0);
+    ModificationTime = FDateTime(0);
     FileSize = 0;
     bIsDirectory = false;
     bIsReadOnly = false;
