@@ -1,7 +1,7 @@
 {
   "FileVersion": 3,
-  "Version": 18,
-  "VersionName": "2.0",
+  "Version": 19,
+  "VersionName": "2.1",
   "FriendlyName": "Blueprint FileSDK",
   "Description": "A simple plugin to interact with files and folders within blueprints.",
   "Category": "Code Plugins",
