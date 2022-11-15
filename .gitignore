@@ -2,3 +2,4 @@ Binaries
 Intermediate
 *.log
 Dist
+*.zip
