@@ -10,6 +10,10 @@ Some, but not all, of the things this plugin lets you do:
 - Rename files/directories
 - Copy files/directories
 
+## Compiling for UE4
+
+To compile for UE4, delete `FileSDK.uplugin` (or rename to `FileSDK.uplugin.ue5`) and rename `FileSDK.uplugin.ue4` to `FileSDK.uplugin`.
+
 ## Documentation
 
 Find a full, detailed list of all the different blueprint nodes this plugin provides at https://wiki.incanta.games/plugins/filesdk
