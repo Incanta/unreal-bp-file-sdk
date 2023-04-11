@@ -610,3 +610,13 @@ std::ios_base::seekdir UFileSDKBPLibrary::FileAnchorToSeekDir(
     }
   }
 }
+
+void UFileSDKBPLibrary::CopyToClipboard(const FString& InString)
+{
+	FPlatformApplicationMisc::ClipboardCopy(*InString);
+}
+
+void UFileSDKBPLibrary::PasteClipboard(FString& Return)
+{  
+	FPlatformApplicationMisc::ClipboardPaste(Return);
+} 
