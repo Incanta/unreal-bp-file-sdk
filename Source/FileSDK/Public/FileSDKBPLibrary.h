@@ -28,11 +28,7 @@
   #include <sys/stat.h>
 #endif
 
-
-
 #include "Runtime/ApplicationCore/Public/HAL/PlatformApplicationMisc.h"
-
-
 
 #include "FileSDKBPLibrary.generated.h"
 
@@ -564,7 +560,7 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
   static FString GetEnvironmentVariable(FString VariableName);
 
   static std::ios_base::seekdir FileAnchorToSeekDir(EFileSDKFileAnchor Anchor);
-  
+};
   /**
    * Stores a string in your system's clipboard.
    *
