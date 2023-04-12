@@ -617,6 +617,6 @@ void UFileSDKBPLibrary::CopyToClipboard(const FString& InString)
 }
 
 void UFileSDKBPLibrary::PasteClipboard(FString& Return)
-{  
-	FPlatformApplicationMisc::ClipboardPaste(Return);
-} 
+{
+  FPlatformApplicationMisc::ClipboardPaste(Return);
+}
