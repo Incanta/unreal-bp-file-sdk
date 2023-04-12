@@ -560,7 +560,6 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
   static FString GetEnvironmentVariable(FString VariableName);
 
   static std::ios_base::seekdir FileAnchorToSeekDir(EFileSDKFileAnchor Anchor);
-};
 
   /**
    * Stores a string in your system's clipboard.
