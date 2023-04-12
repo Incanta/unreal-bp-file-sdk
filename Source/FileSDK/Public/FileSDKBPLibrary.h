@@ -28,6 +28,8 @@
   #include <sys/stat.h>
 #endif
 
+#include "Runtime/ApplicationCore/Public/HAL/PlatformApplicationMisc.h"
+
 #include "FileSDKBPLibrary.generated.h"
 
 UDELEGATE()
@@ -558,4 +560,34 @@ class UFileSDKBPLibrary : public UBlueprintFunctionLibrary {
   static FString GetEnvironmentVariable(FString VariableName);
 
   static std::ios_base::seekdir FileAnchorToSeekDir(EFileSDKFileAnchor Anchor);
+
+  /**
+   * Stores a string in your system's clipboard.
+   *
+   * @param InString String to copy.
+   */
+  UFUNCTION(
+    BlueprintCallable,
+    meta = (
+      DisplayName="Set System Clipboard",
+      Keywords = "Copy string to clipboard"
+    ),
+    Category = "FileSDK | Clipboard"
+  )
+  static void CopyToClipboard(const FString& InString);
+
+  /**
+   * Returns a string from your system's clipboard.
+   *
+   * @param Return String stored in your system's clipboard.
+   */
+  UFUNCTION(
+    BlueprintPure,
+    meta = (
+      DisplayName="Get System Clipboard",
+      Keywords = "Paste string from clipboard"
+    ),
+    Category = "FileSDK | Clipboard"
+  )
+  static void PasteClipboard(FString& Return);
 };

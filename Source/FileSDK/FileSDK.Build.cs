@@ -22,6 +22,7 @@ public class FileSDK : ModuleRules {
       new string[]
       {
         "Core",
+        "ApplicationCore",
       }
       );
 
