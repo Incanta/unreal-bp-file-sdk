@@ -10,7 +10,7 @@
   "DocsURL": "https://wiki.incanta.games/plugins/filesdk",
   "MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/4f737815666c4e7dabf2043fb55a8419",
   "SupportURL": "https://discord.gg/cDcP3rBBUc",
-  "EngineVersion": "5.1.0",
+  "EngineVersion": "5.2.0",
   "CanContainContent": false,
   "IsBetaVersion": false,
   "IsExperimentalVersion": false,
