@@ -19,14 +19,7 @@
 #include "FileSDK.h"
 #include "FileSDKFileReader.h"
 
-#if PLATFORM_WINDOWS
-  #include "Windows/WindowsPlatformMisc.h"
-#elif PLATFORM_LINUX || PLATFORM_ANDROID
-  #include "Unix/UnixPlatformMisc.h"
-#elif PLATFORM_MAC || PLATFORM_IOS
-  #include "Apple/ApplePlatformMisc.h"
-  #include <sys/stat.h>
-#endif
+#include "HAL/PlatformMisc.h"
 
 #include "Runtime/ApplicationCore/Public/HAL/PlatformApplicationMisc.h"
 
