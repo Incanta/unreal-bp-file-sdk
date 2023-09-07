@@ -1,7 +1,7 @@
 {
   "FileVersion": 3,
-  "Version": 20,
-  "VersionName": "2.2",
+  "Version": 21,
+  "VersionName": "2.3",
   "FriendlyName": "Blueprint FileSDK",
   "Description": "A simple plugin to interact with files and folders within blueprints.",
   "Category": "Code Plugins",
@@ -10,7 +10,7 @@
   "DocsURL": "https://wiki.incanta.games/plugins/filesdk",
   "MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/4f737815666c4e7dabf2043fb55a8419",
   "SupportURL": "https://discord.gg/cDcP3rBBUc",
-  "EngineVersion": "5.2.0",
+  "EngineVersion": "5.3.0",
   "CanContainContent": false,
   "IsBetaVersion": false,
   "IsExperimentalVersion": false,
