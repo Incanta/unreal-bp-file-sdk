@@ -8,7 +8,7 @@ void UFileSDKCopyFileAsync::Activate() {
 
   if (fileInfo.bIsDirectory) {
     FFunctionGraphTask::CreateAndDispatchWhenReady(
-      [=] {
+      [=, this] {
         auto successful = UFileSDKBPLibrary::CopyDirectory(
           Source,
           Destination,
@@ -26,7 +26,7 @@ void UFileSDKCopyFileAsync::Activate() {
   } else {
     FFileSDKDelegatePreInfo PreInfo;
     FFunctionGraphTask::CreateAndDispatchWhenReady(
-      [=] {
+      [=, this] {
         auto successful = UFileSDKBPLibrary::CopyFile(
           Source,
           Destination,
