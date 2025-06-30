@@ -17,7 +17,7 @@ mv ${baseZip} ${PLUGIN_NAME}
 
 cd ${PLUGIN_NAME}
 
-versions="5.3.0 5.4.0 5.5.0"
+versions="5.4.0 5.5.0 5.6.0"
 for version in ${versions}
 do
   newContent=$(sed -r "s/\"EngineVersion\": \"[0-9]+\.[0-9]+\.[0-9]+\"/\"EngineVersion\": \"${version}\"/" ${PLUGIN_NAME}.uplugin)
