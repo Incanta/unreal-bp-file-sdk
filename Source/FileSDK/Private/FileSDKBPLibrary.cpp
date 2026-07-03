@@ -2,6 +2,10 @@
 
 #include "FileSDKBPLibrary.h"
 
+#if PLATFORM_MAC || PLATFORM_IOS
+#include <sys/stat.h>
+#endif
+
 UFileSDKBPLibrary::UFileSDKBPLibrary(
   const FObjectInitializer& ObjectInitializer
 ) : Super(ObjectInitializer) {
